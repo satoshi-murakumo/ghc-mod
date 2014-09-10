@@ -5,7 +5,7 @@ import Data.List (isSuffixOf)
 import Language.Haskell.GhcMod.Cradle
 import Language.Haskell.GhcMod.Types
 import System.Directory (canonicalizePath,getCurrentDirectory)
-import System.FilePath ((</>), pathSeparator)
+import System.FilePath ((</>), pathSeparator, normalise)
 import Test.Hspec
 
 import Dir
@@ -31,7 +31,7 @@ spec = do
                     cradleCurrentDir = "test" </> "data" </> "subdir1" </> "subdir2"
                   , cradleRootDir    = "test" </> "data"
                   , cradleCabalFile  = Just ("test" </> "data" </> "cabalapi.cabal")
-                  , cradlePkgDbStack = [GlobalDb, PackageDb (cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d")]
+                  , cradlePkgDbStack = [GlobalDb, PackageDb (normalise $ cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d")]
                   }
         it "works even if a sandbox config file is broken" $ do
             withDirectory "test/data/broken-sandbox" $ \dir -> do
@@ -48,7 +48,11 @@ relativeCradle dir cradle = cradle {
     cradleCurrentDir    = toRelativeDir dir  $  cradleCurrentDir cradle
   , cradleRootDir       = toRelativeDir dir  $  cradleRootDir    cradle
   , cradleCabalFile     = toRelativeDir dir <$> cradleCabalFile  cradle
+  , cradlePkgDbStack    = normalise'         $  cradlePkgDbStack cradle
   }
+  where
+    normalise' [GlobalDb, PackageDb p ] = [GlobalDb, PackageDb (normalise p)]
+    normalise' x = x
 
 -- Work around GHC 7.2.2 where `canonicalizePath "/"` returns "/.".
 stripLastDot :: FilePath -> FilePath

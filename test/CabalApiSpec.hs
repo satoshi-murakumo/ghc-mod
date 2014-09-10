@@ -35,13 +35,15 @@ spec = do
                 pkgDesc <- runD $ parseCabalFile $ fromJust $ cradleCabalFile crdl
                 res <- runD $ getCompilerOptions [] crdl pkgDesc
                 let res' = res {
-                        ghcOptions  = ghcOptions res
-                      , includeDirs = map (toRelativeDir dir) (includeDirs res)
+                        ghcOptions  = map normalise $ ghcOptions res
+                      , includeDirs = map (normalise . (toRelativeDir dir)) (includeDirs res)
                       }
+                putStrLn $ show res'
+
                 if ghcVersion < 706
-                  then ghcOptions res' `shouldContain` ["-global-package-conf", "-no-user-package-conf","-package-conf",cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d","-XHaskell98"]
-                  else ghcOptions res' `shouldContain` ["-global-package-db", "-no-user-package-db","-package-db",cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d","-XHaskell98"]
-                includeDirs res' `shouldBe` ["test/data","test/data/dist/build","test/data/dist/build/autogen","test/data/subdir1/subdir2","test/data/test"]
+                  then ghcOptions res' `shouldContain` ["-global-package-conf", "-no-user-package-conf","-package-conf",normalise $ cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d","-XHaskell98"]
+                  else ghcOptions res' `shouldContain` ["-global-package-db", "-no-user-package-db","-package-db",normalise $ cwd </> "test/data/.cabal-sandbox/i386-osx-ghc-7.6.3-packages.conf.d","-XHaskell98"]
+                includeDirs res' `shouldBe` map normalise ["test/data","test/data/dist/build","test/data/dist/build/autogen","test/data/subdir1/subdir2","test/data/test"]
                 (pkgName `map` depPackages res') `shouldContain` ["Cabal"]
 
 
