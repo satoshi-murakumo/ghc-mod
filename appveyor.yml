@@ -1,0 +1,86 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: v5.0.2.{build}
+
+# branches to build
+branches:
+  only:
+    - windows-ci
+
+# download specific commit of the repository as zip archive. GitHub and BitBucket only
+shallow_clone: true
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  - git config --global core.autocrlf input
+
+# environment variables
+environment:
+  matrix:
+    - HaskellPlatformVersion: 2014.2.0.0 # GHC 7.8
+#    - HaskellPlatformVersion: 2013.2.0.001 # GHC 7.6
+#    - HaskellPlatformVersion: 2012.4.0.0 # GHC 7.4
+
+
+# scripts that run after cloning repository
+install:
+  - choco install HaskellPlatform -Version %HaskellPlatformVersion%
+  - cabal update
+  - cabal sandbox init
+  - cabal install --only-dependencies --enable-tests
+
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+  - cabal configure --enable-tests
+  - cabal build
+
+# to disable automatic builds
+#build: off
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+# to run your custom scripts instead of automatic tests
+test_script:
+  - cabal test
+
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+#artifacts:
+#
+#  # pushing a single file
+#  - path: test.zip
+#
+#  # pushing a single file with environment variable in path and "Deployment name" specified
+#  - path: MyProject\bin\$(configuration)
+#    name: myapp
+#
+#  # pushing entire folder as a zip archive
+#  - path: logs
+#
+#  # pushing all *.nupkg files in directory
+#  - path: out\*.nupkg
+
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+# to disable deployment
+deploy: off
+
