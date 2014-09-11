@@ -32,6 +32,7 @@ environment:
 # scripts that run after cloning repository
 install:
   - choco install HaskellPlatform -Version %HaskellPlatformVersion%
+  - echo %PATH%
   - cabal update
   - cabal sandbox init
   - cabal install --only-dependencies --enable-tests
