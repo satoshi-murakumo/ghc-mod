@@ -33,7 +33,9 @@ environment:
 install:
   - choco install HaskellPlatform -Version %HaskellPlatformVersion%
   - set PATH=%PATH%;C:\Program Files\Haskell Platform\2014.2.0.0\bin;C:\Program Files\Haskell Platform\2014.2.0.0\lib\extralibs\bin
+  - set PATH=%PATH%;C:\Program Files\Haskell Platform\2014.2.0.0\mingw\bin
   - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\bin;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\lib\extralibs\bin
+  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\mingw\bin
   - cabal update
   - cabal sandbox init
   - cabal install --only-dependencies --enable-tests
