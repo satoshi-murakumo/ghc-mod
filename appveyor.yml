@@ -24,18 +24,23 @@ init:
 # environment variables
 environment:
   matrix:
-#    - HaskellPlatformVersion: 2014.2.0.0 # GHC 7.8
-     - HaskellPlatformVersion: 2013.2.0.001 # GHC 7.6
-     - HaskellPlatformVersion: 2012.4.0.0 # GHC 7.4
+#    - HaskellPlatformVersion: 2014.2.0.0     # GHC 7.8
+#      ChocolateyPackageVersion: 2014.2.0.0
+     - HaskellPlatformVersion: 2013.2.0.1     # GHC 7.6
+       ChocolateyPackageVersion: 2013.2.0.001
+     - HaskellPlatformVersion: 2012.4.0.0     # GHC 7.4
+       ChocolateyPackageVersion: 2012.4.0.0
 
 
 # scripts that run after cloning repository
 install:
-  - choco install HaskellPlatform -Version %HaskellPlatformVersion%
-  - set PATH=%PATH%;C:\Program Files\Haskell Platform\2014.2.0.0\bin;C:\Program Files\Haskell Platform\2014.2.0.0\lib\extralibs\bin
-  - set PATH=%PATH%;C:\Program Files\Haskell Platform\2014.2.0.0\mingw\bin
-  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\bin;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\lib\extralibs\bin
-  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\2014.2.0.0\mingw\bin
+  - choco install HaskellPlatform -Version %ChocolateyPackageVersion%
+  - set PATH=%PATH%;C:\Program Files\Haskell Platform\%HaskellPlatformVersion%\bin
+  - set PATH=%PATH%;C:\Program Files\Haskell Platform\%HaskellPlatformVersion%\lib\extralibs\bin
+  - set PATH=%PATH%;C:\Program Files\Haskell Platform\%HaskellPlatformVersion%\mingw\bin
+  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\%HaskellPlatformVersion%\bin
+  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\%HaskellPlatformVersion%\lib\extralibs\bin
+  - set PATH=%PATH%;C:\Program Files (x86)\Haskell Platform\%HaskellPlatformVersion%\mingw\bin
   - cabal update
   - cabal sandbox init
   - cabal install --only-dependencies --enable-tests
