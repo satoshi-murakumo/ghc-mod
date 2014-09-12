@@ -24,9 +24,9 @@ init:
 # environment variables
 environment:
   matrix:
-    - HaskellPlatformVersion: 2014.2.0.0 # GHC 7.8
-#    - HaskellPlatformVersion: 2013.2.0.001 # GHC 7.6
-#    - HaskellPlatformVersion: 2012.4.0.0 # GHC 7.4
+#    - HaskellPlatformVersion: 2014.2.0.0 # GHC 7.8
+     - HaskellPlatformVersion: 2013.2.0.001 # GHC 7.6
+     - HaskellPlatformVersion: 2012.4.0.0 # GHC 7.4
 
 
 # scripts that run after cloning repository
